@@ -1,23 +1,37 @@
+// src/screens/PlaylistDetailScreen.js
 import React, { useMemo } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PlaylistDetailScreen({ route, navigation }) {
   const { listId, titleList } = route.params ?? {};
 
+  // Cada canción tiene SOLO audioUrl (streaming)
   const songsByList = useMemo(() => ({
     '1': [
-      { id: '101', title: 'Warm Up Beat', artist: 'DJ Fit', duration: '3:12', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d' },
-      { id: '102', title: 'Pump It Now', artist: 'Energy Crew', duration: '2:58', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4' },
+      { id: '101', title: 'Warm Up Beat', artist: 'DJ Fit', duration: '3:12',
+        cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d',
+        audioUrl: 'https://www.example.com/audio/warmup.mp3' },
+      { id: '102', title: 'Pump It Now', artist: 'Energy Crew', duration: '2:58',
+        cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+        audioUrl: 'https://www.example.com/audio/pumpit.mp3' },
     ],
     '2': [
-      { id: '201', title: 'Pop Vibes', artist: 'Nova', duration: '3:35', cover: 'https://images.unsplash.com/photo-1464375117522-1311d6a5b81a' },
-      { id: '202', title: 'Night Lights', artist: 'Aqua', duration: '4:04', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4' },
+      { id: '201', title: 'Pop Vibes', artist: 'Nova', duration: '3:35',
+        cover: 'https://images.unsplash.com/photo-1464375117522-1311d6a5b81a',
+        audioUrl: 'https://www.example.com/audio/popvibes.mp3' },
+      { id: '202', title: 'Night Lights', artist: 'Aqua', duration: '4:04',
+        cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4',
+        audioUrl: 'https://www.example.com/audio/nightlights.mp3' },
     ],
     '3': [
-      { id: '301', title: 'Back to 80s', artist: 'RetroWave', duration: '3:49', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745' },
+      { id: '301', title: 'Back to 80s', artist: 'RetroWave', duration: '3:49',
+        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745',
+        audioUrl: 'https://www.example.com/audio/80s.mp3' },
     ],
     '4': [
-      { id: '401', title: 'LoFi Breeze', artist: 'Chillhop', duration: '2:43', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f' },
+      { id: '401', title: 'LoFi Breeze', artist: 'Chillhop', duration: '2:43',
+        cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f',
+        audioUrl: 'https://www.example.com/audio/lofi.mp3' }, // ← pon aquí tu LoFi
     ],
   }), []);
 
@@ -33,6 +47,7 @@ export default function PlaylistDetailScreen({ route, navigation }) {
           artist: item.artist,
           cover: item.cover,
           duration: item.duration,
+          audioUrl: item.audioUrl, // SOLO URL
         })
       }>
       <Text style={styles.songTitle}>{item.title}</Text>
@@ -54,6 +69,8 @@ export default function PlaylistDetailScreen({ route, navigation }) {
           ItemSeparatorComponent={() => <View style={styles.sep} />}
           ListEmptyComponent={<Text style={styles.empty}>No hay canciones.</Text>}
         />
+
+        {/* Botón VOLVER */}
         <View style={{ marginTop: 16 }}>
           <TouchableOpacity
             style={styles.backBtn}
@@ -61,22 +78,12 @@ export default function PlaylistDetailScreen({ route, navigation }) {
             <Text style={styles.backTxt}>VOLVER</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  backBtn: {
-  backgroundColor: '#4b5bdc',
-  paddingVertical: 12,
-  paddingHorizontal: 14,
-  borderRadius: 10,
-  alignItems: 'center',
-  marginTop: 10,
-},
-backTxt: { color: 'white', fontSize: 16, fontWeight: '600' },
   container: { flex: 1, alignItems: 'center', padding: 16, backgroundColor: '#101015' },
   card: {
     width: '100%',
@@ -101,4 +108,13 @@ backTxt: { color: 'white', fontSize: 16, fontWeight: '600' },
   songMeta: { color: '#a7a7b3', marginTop: 2 },
   sep: { height: 10 },
   empty: { color: '#8e8e98', marginTop: 12, textAlign: 'center' },
+  backBtn: {
+    backgroundColor: '#44445a',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  backTxt: { color: 'white', fontSize: 16, fontWeight: '600' },
 });
