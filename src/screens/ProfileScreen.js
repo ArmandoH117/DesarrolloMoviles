@@ -1,4 +1,3 @@
-// src/screens/ProfileScreen.js
 import React, { useState } from 'react';
 import {
   Dimensions,
@@ -15,10 +14,9 @@ import {
 const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ navigation }) {
-  // Estado
-  const [userName] = useState('MicJ025');
 
-  // Data (puedes extraerla luego a src/utils/playlistData.js)
+  const [userName] = useState('AfedoH117');
+
   const myPlayList = [
     { id: '1', value: 'Canciones para hacer ejercicio' },
     { id: '2', value: 'Pop Music' },
@@ -38,11 +36,12 @@ export default function ProfileScreen({ navigation }) {
     >
       <Text style={styles.txtBtn}>{item.value}</Text>
     </TouchableOpacity>
+    
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Encabezado / tarjeta */}
+      {}
       <View style={styles.card}>
         <View style={styles.header}>
           <View style={styles.viewImg}>
@@ -60,7 +59,7 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Lista de playlists */}
+        {}
         <FlatList
           data={myPlayList}
           keyExtractor={(item) => String(item.id)}
@@ -70,12 +69,8 @@ export default function ProfileScreen({ navigation }) {
         />
       </View>
 
-      {/* Botones de navegación originales */}
+      {}
       <View style={{ marginTop: 12 }}>
-        <Button title="Ir a Detalle (demo)" onPress={() =>
-          navigation.navigate('DetallePlaylist', { listId: 15, titleList: 'the best Songs' })
-        } />
-        <View style={{ height: 8 }} />
         <Button title="Regresar a Inicio" onPress={() => navigation.goBack()} />
       </View>
     </SafeAreaView>
@@ -110,5 +105,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: 'center',
   },
-  txtBtn: { fontSize: 16, color: 'white', textAlign: 'left' },
+  txtBtn: { 
+    fontSize: 16, 
+    color: 'white', 
+    textAlign: 'left' 
+  },
 });
+

@@ -1,4 +1,3 @@
-// src/screens/SongDetailScreen.js
 import React from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View, Button } from 'react-native';
 

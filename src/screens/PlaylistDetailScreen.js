@@ -1,11 +1,9 @@
-// src/screens/PlaylistDetailScreen.js
 import React, { useMemo } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PlaylistDetailScreen({ route, navigation }) {
   const { listId, titleList } = route.params ?? {};
 
-  // Mock de canciones por playlist (puedes moverlo luego a src/utils/)
   const songsByList = useMemo(() => ({
     '1': [
       { id: '101', title: 'Warm Up Beat', artist: 'DJ Fit', duration: '3:12', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d' },
@@ -56,12 +54,29 @@ export default function PlaylistDetailScreen({ route, navigation }) {
           ItemSeparatorComponent={() => <View style={styles.sep} />}
           ListEmptyComponent={<Text style={styles.empty}>No hay canciones.</Text>}
         />
+        <View style={{ marginTop: 16 }}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.backTxt}>VOLVER</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  backBtn: {
+  backgroundColor: '#4b5bdc',
+  paddingVertical: 12,
+  paddingHorizontal: 14,
+  borderRadius: 10,
+  alignItems: 'center',
+  marginTop: 10,
+},
+backTxt: { color: 'white', fontSize: 16, fontWeight: '600' },
   container: { flex: 1, alignItems: 'center', padding: 16, backgroundColor: '#101015' },
   card: {
     width: '100%',
