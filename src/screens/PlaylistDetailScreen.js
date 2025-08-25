@@ -14,14 +14,17 @@ export default function PlaylistDetailScreen({ route, navigation }) {
       onPress={() =>
         navigation.navigate('DetalleCancion', {
           songId: item.idSong,
-          title: item.valSong,      
-          artist: item.artista,     
-          cover: item.portada,      
+          title: item.valSong,
+          artist: item.artista,
+          cover: item.portada,
           duration: item.duration ?? '—',
+          audioUrl: item.audioUrl ?? null,   // ← PASAMOS LA URL DE AUDIO
         })
       }>
       <Text style={styles.songTitle}>{item.valSong}</Text>
-      <Text style={styles.songMeta}>{item.artista}</Text>
+      <Text style={styles.songMeta}>
+        {item.artista}{item?.duration ? ` • ${item.duration}` : ''}
+      </Text>
     </TouchableOpacity>
   );
 
