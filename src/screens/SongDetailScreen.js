@@ -1,110 +1,73 @@
-// src/screens/SongDetailScreen.js
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Audio } from 'expo-av';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function SongDetailScreen({ route, navigation }) {
-  const { songId, title, artist, cover, duration, audioUrl } = route.params ?? {};
-
-  const soundRef = useRef(null);
+  const { songId, title, artist, cover, duration } = route.params ?? {};
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    // Config audio
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: false,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-      playThroughEarpieceAndroid: false,
-    });
-
-    // Cargar sonido SOLO desde URL
-    (async () => {
-      try {
-        const sound = new Audio.Sound();
-        soundRef.current = sound;
-
-        await sound.loadAsync({ uri: audioUrl }, { shouldPlay: false, volume: 1.0 });
-        setIsLoaded(true);
-
-        sound.setOnPlaybackStatusUpdate((status) => {
-          if (!status.isLoaded) return;
-          setIsPlaying(status.isPlaying);
-        });
-      } catch (e) {
-        console.warn('Error cargando audio:', e);
-      }
-    })();
-
-    // Limpieza
-    return () => {
-      (async () => {
-        try {
-          const s = soundRef.current;
-          if (s) {
-            await s.stopAsync();
-            await s.unloadAsync();
-          }
-        } catch {}
-      })();
-    };
-  }, [audioUrl]);
-
-  const handlePlayPause = async () => {
-    const s = soundRef.current;
-    if (!s || !isLoaded) return;
-    const status = await s.getStatusAsync();
-    if (status.isPlaying) {
-      await s.pauseAsync();
-    } else {
-      await s.playAsync();
-    }
-  };
-
-  const handleStop = async () => {
-    const s = soundRef.current;
-    if (!s || !isLoaded) return;
-    await s.stopAsync();
-  };
+  const togglePlay = () => setIsPlaying((p) => !p);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
+        {}
         <Image source={{ uri: cover }} style={styles.cover} />
 
+        {}
         <View style={{ marginTop: 14 }}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{artist}</Text>
           <Text style={styles.caption}>Duración • {duration}</Text>
-          <Text style={styles.badge}>Fuente: streaming</Text>
         </View>
 
-        <View style={{ marginTop: 16 }}>
-          <TouchableOpacity
-            style={[styles.btn, styles.primaryBtn, !isLoaded && { opacity: 0.5 }]}
-            disabled={!isLoaded}
-            onPress={handlePlayPause}
-          >
-            <Text style={styles.btnTxt}>{isPlaying ? 'Pausar' : 'Reproducir'}</Text>
+        {}
+        <View style={{ marginTop: 18 }}>
+          <View style={styles.progressTimes}>
+            <Text style={styles.timeTxt}>0:46</Text>
+            <Text style={styles.timeTxt}>{duration || '3:52'}</Text>
+          </View>
+          <View style={styles.progressBar}>
+            <View style={styles.progressFill} />
+            <View style={styles.progressThumb} />
+          </View>
+        </View>
+
+        {}
+        <View style={styles.controls}>
+          <TouchableOpacity style={styles.ctrlSmall} onPress={() => {}}>
+            <Ionicons name="play-skip-back" size={28} color="#d6d6e3" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.btn, styles.secondaryBtn, { marginTop: 10 }]}
-            onPress={handleStop}
-          >
-            <Text style={styles.btnTxt}>Detener</Text>
+          <TouchableOpacity style={styles.ctrlBig} onPress={togglePlay} activeOpacity={0.85}>
+            {isPlaying
+              ? <Ionicons name="pause" size={34} color="#fff" />
+              : <Ionicons name="play" size={34} color="#fff" />
+            }
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.btn, styles.backBtn, { marginTop: 10 }]}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.btnTxt}>VOLVER</Text>
+          <TouchableOpacity style={styles.ctrlSmall} onPress={() => {}}>
+            <Ionicons name="play-skip-forward" size={28} color="#d6d6e3" />
           </TouchableOpacity>
         </View>
+
+        {}
+        <View style={styles.controlsSecondary}>
+          <TouchableOpacity onPress={() => {}}>
+            <MaterialCommunityIcons name="shuffle" size={22} color="#a7a7b3" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {}}>
+            <MaterialCommunityIcons name="repeat" size={22} color="#a7a7b3" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {}}>
+            <Ionicons name="heart-outline" size={22} color="#a7a7b3" />
+          </TouchableOpacity>
+        </View>
+
+        {}
+        <TouchableOpacity style={[styles.neutralBtn, { marginTop: 14 }]} onPress={() => navigation.goBack()}>
+          <Text style={styles.btnTxt}>VOLVER</Text>
+        </TouchableOpacity>
 
         <Text style={styles.footerId}>ID pista: {songId}</Text>
       </View>
@@ -112,26 +75,58 @@ export default function SongDetailScreen({ route, navigation }) {
   );
 }
 
+const ACCENT = '#4b5bdc';
+
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', padding: 16, backgroundColor: '#101015' },
   card: {
     width: '100%', maxWidth: 480, backgroundColor: '#1b1b22',
-    borderRadius: 12, padding: 16, shadowOpacity: 0.2, shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 }, elevation: 4,
+    borderRadius: 16, padding: 16,
+    shadowOpacity: 0.2, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, elevation: 4,
   },
   cover: { width: '100%', height: 260, borderRadius: 12, borderWidth: 1, borderColor: '#2a2a35' },
-  title: { color: '#fff', fontSize: 22, fontWeight: '700' },
+  title: { color: '#fff', fontSize: 22, fontWeight: '800' },
   subtitle: { color: '#bdbdbd', marginTop: 4, fontSize: 16 },
   caption: { color: '#8e8e98', marginTop: 8 },
-  badge: {
-    marginTop: 8, alignSelf: 'flex-start', color: '#d6d6e3',
-    backgroundColor: '#22222b', paddingHorizontal: 8, paddingVertical: 4,
-    borderRadius: 8, borderWidth: 1, borderColor: '#2a2a35', fontSize: 12,
+
+  progressTimes: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
+  timeTxt: { color: '#8e8e98', fontSize: 12 },
+  progressBar: {
+    height: 8, backgroundColor: '#22222b', borderRadius: 999,
+    borderWidth: 1, borderColor: '#2a2a35', position: 'relative', overflow: 'hidden',
   },
-  btn: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10, alignItems: 'center' },
-  primaryBtn: { backgroundColor: '#4b5bdc' },
-  secondaryBtn: { backgroundColor: '#22222b', borderWidth: 1, borderColor: '#2a2a35' },
-  backBtn: { backgroundColor: '#44445a' },
+  progressFill: { position: 'absolute', left: 0, top: 0, bottom: 0, width: '35%', backgroundColor: ACCENT },
+  progressThumb: {
+    position: 'absolute', left: '35%', top: -6,
+    width: 20, height: 20, borderRadius: 10, backgroundColor: '#fff',
+    borderWidth: 3, borderColor: ACCENT,
+  },
+
+  controls: {
+    marginTop: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 24,
+  },
+  ctrlSmall: {
+    width: 52, height: 52, borderRadius: 26, backgroundColor: '#22222b',
+    alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: '#2a2a35',
+  },
+  ctrlBig: {
+    width: 72, height: 72, borderRadius: 36, backgroundColor: ACCENT,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 10, shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+  },
+
+  controlsSecondary: {
+    marginTop: 10, flexDirection: 'row', gap: 18, justifyContent: 'center',
+  },
+
+  neutralBtn: {
+    backgroundColor: '#4b5bdc',
+    paddingVertical: 12, paddingHorizontal: 18, borderRadius: 10, alignItems: 'center',
+  },
   btnTxt: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  footerId: { marginTop: 16, color: '#6f6f78', fontSize: 12, textAlign: 'right' },
+
+  footerId: { marginTop: 12, color: '#6f6f78', fontSize: 12, textAlign: 'right' },
 });

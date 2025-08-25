@@ -1,36 +1,28 @@
-// src/screens/HomeScreen.js
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
-        {/* LOGO local (ajusta la ruta si tu logo está en otra carpeta) */}
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-
+        <Image source={require('../../assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
         <Text style={styles.title}>BMusic</Text>
         <Text style={styles.subtitle}>Tu música, tus playlists.</Text>
 
-        <TouchableOpacity
-          style={styles.primaryBtn}
-          onPress={() => navigation.navigate('Perfil')}
-        >
+        {}
+        <TouchableOpacity style={styles.primaryBtn} onPress={() => navigation.replace('Perfil')}>
           <Text style={styles.primaryTxt}>Ir a tu Perfil</Text>
         </TouchableOpacity>
 
+        {}
         <TouchableOpacity
           style={styles.secondaryBtn}
-          onPress={() => navigation.navigate('DetallePlaylist', { listId: '1', titleList: 'Recomendadas' })}
+          onPress={() => navigation.navigate('DetallePlaylist', { listId: '1', titleList: 'Recomendadas', songs: [] })}
         >
           <Text style={styles.secondaryTxt}>Explorar Recomendadas</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.footer}>Hecho con React Native + Expo</Text>
+      <Text style={styles.footer}>HE22-I04-001</Text>
     </SafeAreaView>
   );
 }
